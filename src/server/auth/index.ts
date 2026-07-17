@@ -1,0 +1,37 @@
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+import { db } from "../db";
+
+
+export const auth = betterAuth({
+    database: prismaAdapter(db, {
+        provider: "postgresql", // or "mysql", "postgresql", ...etc
+    }),
+    emailAndPassword:{
+        enabled : true,
+    },
+    socialProviders :{
+        github : {
+            clientId : process.env.GITHUB_CIENT_ID!,
+            clientSecret : process.env.GITHUB_CLIENT_SECRET!,
+        },
+    },
+    session : {
+            expiresIN : 60 * 60 * 24* 7,
+            updateAge : 60 * 60 * 24,
+            cookieCache:{
+                enabled : true,
+                maxAge: 60 * 5,
+            },
+        },
+
+    trustedOrigins: [process.env.BETTER_AUTH_URL!],
+
+});
+
+
+export type Session = typeof auth.$Infer.Session;
