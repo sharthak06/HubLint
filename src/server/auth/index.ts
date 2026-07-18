@@ -16,12 +16,20 @@ export const auth = betterAuth({
     },
     socialProviders :{
         github : {
-            clientId : process.env.GITHUB_CIENT_ID!,
+            clientId : process.env.GITHUB_CLIENT_ID!,
             clientSecret : process.env.GITHUB_CLIENT_SECRET!,
+            scope:["read:user","user:email","repo"],
+            
+        },
+    },
+    account:{
+        accountLinking:{
+            enabled: true,
+            trustedProviders:["github"],
         },
     },
     session : {
-            expiresIN : 60 * 60 * 24* 7,
+            expiresIn : 60 * 60 * 24* 7,
             updateAge : 60 * 60 * 24,
             cookieCache:{
                 enabled : true,
